@@ -6,6 +6,8 @@ import {
   useAsyncDebounce,
   useSortBy,
   usePagination,
+  useGroupBy,
+  useExpanded,
 } from "react-table";
 
 interface ColumnDetails {
@@ -14,7 +16,7 @@ interface ColumnDetails {
 }
 
 interface Column {
-  header: string;
+  Header: string;
   accessor: string;
 }
 
@@ -80,7 +82,9 @@ export default function DataTable({ columns, data }: Props) {
       data,
     },
     useGlobalFilter,
+    useGroupBy,
     useSortBy,
+    useExpanded,
     usePagination
   );
 
@@ -104,8 +108,6 @@ export default function DataTable({ columns, data }: Props) {
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map((column) => (
-                        // Add the sorting props to control sorting. For this example
-                        // we can add them into the header props
                         <th
                           scope="col"
                           className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -114,7 +116,13 @@ export default function DataTable({ columns, data }: Props) {
                           )}
                         >
                           {column.render("Header")}
-                          {/* Add a sort direction indicator */}
+                          {column.canGroupBy ? (
+                            // If the column can be grouped, let's add a toggle
+                            <span {...column.getGroupByToggleProps()}>
+                              {column.isGrouped ? "🛑 " : "👊 "}
+                            </span>
+                          ) : null}
+                          {column.render("Header")}
                           <span>
                             {column.isSorted
                               ? column.isSortedDesc
@@ -141,7 +149,22 @@ export default function DataTable({ columns, data }: Props) {
                               {...cell.getCellProps()}
                               className="px-6 py-4 whitespace-nowrap"
                             >
-                              {cell.render("Cell")}
+                              {cell.isGrouped ? (
+                                // If it's a grouped cell, add an expander and row count
+                                <>
+                                  <span {...row.getToggleRowExpandedProps()}>
+                                    {row.isExpanded ? "👇" : "👉"}
+                                  </span>{" "}
+                                  {cell.render("Cell")} ({row.subRows.length})
+                                </>
+                              ) : cell.isAggregated ? (
+                                // If the cell is aggregated, use the Aggregated
+                                // renderer for cell
+                                cell.render("Aggregated")
+                              ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
+                                // Otherwise, just render the regular cell
+                                cell.render("Cell")
+                              )}
                             </td>
                           );
                         })}

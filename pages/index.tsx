@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import axios from "axios";
-import Table from "./components/Table";
 import Layout from "./components/Layout";
 import DataTable from "./components/DataTable";
 
@@ -11,8 +10,9 @@ interface ColumnDetails {
 }
 
 interface Column {
-  header: string;
+  Header: string;
   accessor: string;
+  cell: any;
 }
 
 const Home: NextPage = () => {
@@ -35,14 +35,18 @@ const Home: NextPage = () => {
   const data = React.useMemo<ColumnDetails[]>(() => apiData, [apiData]);
 
   const columns = React.useMemo<Column[]>(
-    () => cols.map((col) => ({ header: col.id, accessor: col.id })),
+    () =>
+      cols.map((col) => ({
+        Header: col.id,
+        accessor: col.id,
+        cell: (info: any) => info.getValue(),
+      })),
     [cols]
   );
 
   return (
     <div>
       <Layout>
-        {/* <Table /> */}
         <DataTable data={data} columns={columns} />
       </Layout>
     </div>
