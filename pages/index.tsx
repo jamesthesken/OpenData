@@ -11,7 +11,7 @@ interface ColumnDetails {
 }
 
 interface Column {
-  Header: string;
+  header: string;
   accessor: string;
 }
 
@@ -35,7 +35,7 @@ const Home: NextPage = () => {
   const data = React.useMemo<ColumnDetails[]>(() => apiData, [apiData]);
 
   const columns = React.useMemo<Column[]>(
-    () => cols.map((col) => ({ Header: col.id, accessor: col.id })),
+    () => cols.map((col) => ({ header: col.id, accessor: col.id })),
     [cols]
   );
 

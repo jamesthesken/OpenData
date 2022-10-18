@@ -14,7 +14,7 @@ interface ColumnDetails {
 }
 
 interface Column {
-  Header: string;
+  header: string;
   accessor: string;
 }
 
