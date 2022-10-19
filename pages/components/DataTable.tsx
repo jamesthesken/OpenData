@@ -8,7 +8,9 @@ import {
   usePagination,
   useGroupBy,
   useExpanded,
+  useRowSelect,
 } from "react-table";
+import { selectRowsFn } from "@tanstack/react-table";
 
 interface ColumnDetails {
   [key: string]: string;
@@ -52,6 +54,56 @@ function GlobalFilter({
   );
 }
 
+// This is a custom filter UI for selecting
+// a unique option from a list
+function SelectColumnFilter({
+  column: { filterValue, setFilter, preFilteredRows, id },
+}: any) {
+  // Calculate the options for filtering
+  // using the preFilteredRows
+  const options = React.useMemo(() => {
+    const options = new Set();
+    preFilteredRows.forEach((row: any) => {
+      options.add(row.values[id]);
+    });
+    return [...options.values()];
+  }, [id, preFilteredRows]);
+
+  // Render a multi-select box
+  return (
+    <select
+      value={filterValue}
+      onChange={(e) => {
+        setFilter(e.target.value || undefined);
+      }}
+    >
+      <option value="">All</option>
+      {options.map((option, i) => (
+        <option key={i} value={option as any}>
+          {option as any}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+const IndeterminateCheckbox = React.forwardRef(
+  ({ indeterminate, ...rest }: any, ref) => {
+    const defaultRef = React.useRef();
+    const resolvedRef: any = ref || defaultRef;
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    );
+  }
+);
+
 export default function DataTable({ columns, data }: Props) {
   // Use the state and functions returned from useTable to build your UI
   const {
@@ -60,14 +112,11 @@ export default function DataTable({ columns, data }: Props) {
     headerGroups,
     rows,
     prepareRow,
-    state, // new
-    preGlobalFilteredRows, // new
-    setGlobalFilter, // new,
-    //new
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
-
-    // The rest of these things are super handy, too ;)
+    selectedFlatRows,
+    state: { pageIndex, pageSize, selectedRowIds },
+    preGlobalFilteredRows,
+    setGlobalFilter,
+    page,
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -85,7 +134,35 @@ export default function DataTable({ columns, data }: Props) {
     useGroupBy,
     useSortBy,
     useExpanded,
-    usePagination
+    usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => {
+        return [
+          {
+            id: "selection",
+            // Make this column a groupByBoundary. This ensures that groupBy columns
+            // are placed after it
+            groupByBoundary: true,
+            // The header can use the table's getToggleAllRowsSelectedProps method
+            // to render a checkbox
+            Header: ({ getToggleAllRowsSelectedProps }) => (
+              <div>
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+              </div>
+            ),
+            // The cell can use the individual row's getToggleRowSelectedProps method
+            // to the render a checkbox
+            Cell: ({ row }: any) => (
+              <div>
+                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+              </div>
+            ),
+          },
+          ...columns,
+        ];
+      });
+    }
   );
 
   // Render the UI for your table
@@ -93,7 +170,6 @@ export default function DataTable({ columns, data }: Props) {
     <>
       <GlobalFilter
         preGlobalFilteredRows={preGlobalFilteredRows}
-        globalFilter={state.globalFilter}
         setGlobalFilter={setGlobalFilter}
       />
       <div className="mt-2 flex flex-col">
@@ -115,7 +191,6 @@ export default function DataTable({ columns, data }: Props) {
                             column.getSortByToggleProps()
                           )}
                         >
-                          {column.render("Header")}
                           {column.canGroupBy ? (
                             // If the column can be grouped, let's add a toggle
                             <span {...column.getGroupByToggleProps()}>
@@ -193,11 +268,11 @@ export default function DataTable({ columns, data }: Props) {
         <span>
           Page{" "}
           <strong>
-            {state.pageIndex + 1} of {pageOptions.length}
+            {pageIndex + 1} of {pageOptions.length}
           </strong>{" "}
         </span>
         <select
-          value={state.pageSize}
+          value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value));
           }}
@@ -209,6 +284,7 @@ export default function DataTable({ columns, data }: Props) {
           ))}
         </select>
       </div>
+      <button onClick={() => console.log(selectedFlatRows)}>Get Data</button>
     </>
   );
 }

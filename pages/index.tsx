@@ -27,6 +27,7 @@ const Home: NextPage = () => {
       .then(function (response) {
         // TODO: catch errors and present to user
         // handle success
+        console.log(response.data);
         setRowData(response.data.result.records);
         setColHeaders(response.data.result.fields);
       });
