@@ -10,7 +10,9 @@ import {
   useExpanded,
   useRowSelect,
 } from "react-table";
-import { selectRowsFn } from "@tanstack/react-table";
+import { groupBy } from "lodash";
+import Dropdown from "./Dropdown";
+import MyLine from "./Line";
 
 interface ColumnDetails {
   [key: string]: string;
@@ -284,7 +286,63 @@ export default function DataTable({ columns, data }: Props) {
           ))}
         </select>
       </div>
-      <button onClick={() => console.log(selectedFlatRows)}>Get Data</button>
+      <button
+        onClick={() =>
+          console.log(
+            groupByToMap(data, (k) => k["Candidate Name"]).forEach(
+              (value: ColumnDetails[], key: string) => {
+                console.log(
+                  key,
+                  value
+                    .map((person) => ({
+                      x: person["Purpose of Expenditure"],
+                      y: person["Unpaid Expenditure Amount"],
+                    }))
+                    .filter((o) => o.y != null || o.x != null)
+                );
+              }
+            )
+          )
+        }
+      >
+        Get Data
+      </button>
+      <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow mt-8">
+        <div className="px-4 py-5 sm:px-6">
+          <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
+            Horizontal Axis
+          </h1>
+        </div>
+        <div className="px-4 py-5 sm:p-6">
+          <Dropdown column={columns} />
+          <MyLine
+            chartData={[
+              {
+                id: "Abercrombie, Neil",
+                data: data
+                  .filter((o) =>
+                    o["Candidate Name"].includes("Abercrombie, Neil")
+                  )
+                  .map((person) => ({
+                    x: person["Purpose of Expenditure"],
+                    y: person["Unpaid Expenditure Amount"],
+                  }))
+                  .filter((o) => o.y != null || o.x != null),
+              },
+            ]}
+          />
+        </div>
+      </div>
     </>
   );
 }
+
+const groupByToMap = <T, Q>(
+  array: T[],
+  predicate: (value: T, index: number, array: T[]) => Q
+) =>
+  array.reduce((map, value, index, array) => {
+    const key = predicate(value, index, array);
+    map.get(key)?.push(value) ?? map.set(key, [value]);
+    return map;
+  }, new Map<Q, T[]>());
