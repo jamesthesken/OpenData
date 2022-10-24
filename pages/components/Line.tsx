@@ -1,23 +1,15 @@
 // install (please make sure versions match peerDependencies)
 // yarn add @nivo/core @nivo/line
-import { Line } from "@nivo/line";
+import { ResponsiveLine } from "@nivo/line";
 
 interface Props {
-  chartData: Array<{
-    id: string | number;
-    data: Array<{
-      x: number | string | Date;
-      y: number | string | Date;
-    }>;
-  }>;
+  chartData: ChartData;
 }
 
 export default function MyLine({ chartData }: Props) {
   return (
-    <Line
+    <ResponsiveLine
       data={chartData}
-      height={480}
-      width={1080}
       margin={{ top: 50, right: 110, bottom: 120, left: 60 }}
       lineWidth={2}
       xScale={{ type: "point" }}

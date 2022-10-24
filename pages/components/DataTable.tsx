@@ -1,5 +1,5 @@
 import "regenerator-runtime/runtime";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   useTable,
   useGlobalFilter,
@@ -10,9 +10,9 @@ import {
   useExpanded,
   useRowSelect,
 } from "react-table";
-import { groupBy } from "lodash";
 import Dropdown from "./Dropdown";
 import MyLine from "./Line";
+import ResponsiveScatter from "./ScatterPlot";
 
 interface ColumnDetails {
   [key: string]: string;
@@ -167,6 +167,16 @@ export default function DataTable({ columns, data }: Props) {
     }
   );
 
+  const [chartData, setChartData] = useState(
+    Array<{
+      id: string | number;
+      data: Array<{
+        x: number | string | Date;
+        y: number | string | Date;
+      }>;
+    }>
+  );
+
   // Render the UI for your table
   return (
     <>
@@ -288,20 +298,12 @@ export default function DataTable({ columns, data }: Props) {
       </div>
       <button
         onClick={() =>
-          console.log(
-            groupByToMap(data, (k) => k["Candidate Name"]).forEach(
-              (value: ColumnDetails[], key: string) => {
-                console.log(
-                  key,
-                  value
-                    .map((person) => ({
-                      x: person["Purpose of Expenditure"],
-                      y: person["Unpaid Expenditure Amount"],
-                    }))
-                    .filter((o) => o.y != null || o.x != null)
-                );
-              }
-            )
+          groupByToMap(data, (k) => k["Candidate Name"]).forEach(
+            (value: ColumnDetails[], key: string) => {
+              const arr = mapToChart(value, key, chartData);
+              setChartData(arr);
+              console.log(chartData);
+            }
           )
         }
       >
@@ -313,24 +315,10 @@ export default function DataTable({ columns, data }: Props) {
             Horizontal Axis
           </h1>
         </div>
-        <div className="px-4 py-5 sm:p-6">
+        <div className="px-4 py-5 sm:p-6 h-96 w-full">
           <Dropdown column={columns} />
-          <MyLine
-            chartData={[
-              {
-                id: "Abercrombie, Neil",
-                data: data
-                  .filter((o) =>
-                    o["Candidate Name"].includes("Abercrombie, Neil")
-                  )
-                  .map((person) => ({
-                    x: person["Purpose of Expenditure"],
-                    y: person["Unpaid Expenditure Amount"],
-                  }))
-                  .filter((o) => o.y != null || o.x != null),
-              },
-            ]}
-          />
+          {/* <MyLine chartData={chartData} /> */}
+          <ResponsiveScatter chartData={chartData} />
         </div>
       </div>
     </>
@@ -346,3 +334,16 @@ const groupByToMap = <T, Q>(
     map.get(key)?.push(value) ?? map.set(key, [value]);
     return map;
   }, new Map<Q, T[]>());
+
+function mapToChart(value: ColumnDetails[], key: string, arr: ChartData) {
+  arr.push({
+    id: key,
+    data: value
+      .map((person) => ({
+        x: person["Purpose of Expenditure"],
+        y: person["Unpaid Expenditure Amount"],
+      }))
+      .filter((o) => o.y != null || o.x != null),
+  });
+  return arr;
+}
