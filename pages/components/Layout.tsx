@@ -1,33 +1,32 @@
-import { ReactNode, Fragment } from 'react'
-import { NextPage } from 'next';
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-
+import { ReactNode, Fragment } from "react";
+import { NextPage } from "next";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
+  name: "Tom Cook",
+  email: "tom@example.com",
   imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+};
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-]
+  { name: "Dashboard", href: "#", current: true },
+  { name: "Team", href: "#", current: false },
+  { name: "Projects", href: "#", current: false },
+  { name: "Calendar", href: "#", current: false },
+];
 const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
+  { name: "Your Profile", href: "#" },
+  { name: "Settings", href: "#" },
+  { name: "Sign out", href: "#" },
+];
 
 interface Props {
-    children: ReactNode;
-  }
+  children: ReactNode;
+}
 
 function classNames(...classes: any) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 const Layout: NextPage<Props> = ({ children }) => {
@@ -59,11 +58,11 @@ const Layout: NextPage<Props> = ({ children }) => {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? 'border-indigo-500 text-gray-900'
-                              : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                            'inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium'
+                              ? "border-indigo-500 text-gray-900"
+                              : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
+                            "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                           )}
-                          aria-current={item.current ? 'page' : undefined}
+                          aria-current={item.current ? "page" : undefined}
                         >
                           {item.name}
                         </a>
@@ -84,7 +83,11 @@ const Layout: NextPage<Props> = ({ children }) => {
                       <div>
                         <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                           <span className="sr-only">Open user menu</span>
-                          <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                          <img
+                            className="h-8 w-8 rounded-full"
+                            src={user.imageUrl}
+                            alt=""
+                          />
                         </Menu.Button>
                       </div>
                       <Transition
@@ -103,8 +106,8 @@ const Layout: NextPage<Props> = ({ children }) => {
                                 <a
                                   href={item.href}
                                   className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
                                   )}
                                 >
                                   {item.name}
@@ -121,9 +124,15 @@ const Layout: NextPage<Props> = ({ children }) => {
                     <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
-                        <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                        <XMarkIcon
+                          className="block h-6 w-6"
+                          aria-hidden="true"
+                        />
                       ) : (
-                        <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                        <Bars3Icon
+                          className="block h-6 w-6"
+                          aria-hidden="true"
+                        />
                       )}
                     </Disclosure.Button>
                   </div>
@@ -139,11 +148,11 @@ const Layout: NextPage<Props> = ({ children }) => {
                       href={item.href}
                       className={classNames(
                         item.current
-                          ? 'bg-indigo-50 border-indigo-500 text-indigo-700'
-                          : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800',
-                        'block pl-3 pr-4 py-2 border-l-4 text-base font-medium'
+                          ? "bg-indigo-50 border-indigo-500 text-indigo-700"
+                          : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
+                        "block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                       )}
-                      aria-current={item.current ? 'page' : undefined}
+                      aria-current={item.current ? "page" : undefined}
                     >
                       {item.name}
                     </Disclosure.Button>
@@ -152,11 +161,19 @@ const Layout: NextPage<Props> = ({ children }) => {
                 <div className="border-t border-gray-200 pt-4 pb-3">
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
-                      <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                      <img
+                        className="h-10 w-10 rounded-full"
+                        src={user.imageUrl}
+                        alt=""
+                      />
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium text-gray-800">{user.name}</div>
-                      <div className="text-sm font-medium text-gray-500">{user.email}</div>
+                      <div className="text-base font-medium text-gray-800">
+                        {user.name}
+                      </div>
+                      <div className="text-sm font-medium text-gray-500">
+                        {user.email}
+                      </div>
                     </div>
                     <button
                       type="button"
@@ -185,20 +202,13 @@ const Layout: NextPage<Props> = ({ children }) => {
         </Disclosure>
 
         <div className="py-10">
-          <header>
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">Dashboard</h1>
-            </div>
-          </header>
           <main>
-            <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-              {children}
-            </div>
+            <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</div>
           </main>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
 export default Layout;

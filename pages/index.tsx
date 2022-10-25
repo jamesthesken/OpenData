@@ -1,67 +1,75 @@
-import React, { useState, useEffect, useContext, createContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import type { NextPage } from "next";
 import axios from "axios";
 import Layout from "./components/Layout";
-import DataTable from "./components/DataTable";
-import { table } from "console";
-import { DataContext } from "../hooks/useData";
+import BreadCrumbs from "./components/dashboard/BreadCrumbs";
+import Link from "next/link";
 
-interface ColumnDetails {
-  [key: string]: string;
-  id: string;
+interface item {
+  title: string;
+  resources: Array<{
+    id: string;
+    format: string;
+  }>;
 }
 
-interface Column {
-  Header: string;
-  accessor: string;
-  cell: any;
-}
+const breadCrumbs = {
+  back: {
+    path: "/",
+    text: "Back",
+  },
+  first: {
+    path: "/",
+    text: "Dashboard",
+  },
+};
 
 const Home: NextPage = () => {
-  const [apiData, setRowData] = useState<ColumnDetails[]>([]);
-  const [cols, setColHeaders] = useState<ColumnDetails[]>([]);
-
-  const value = useContext(DataContext);
+  const [dataList, setDataList] = useState([]);
 
   useEffect(() => {
     axios
       .get(
-        "https://opendata.hawaii.gov/api/3/action/datastore_search?resource_id=caf4dc69-cf11-43dc-b4f9-3c29156d7630"
+        "https://opendata.hawaii.gov/api/3/action/current_package_list_with_resources"
       )
       .then(function (response) {
         // TODO: catch errors and present to user
         // handle success
         console.log(response.data);
-        setRowData(response.data.result.records);
-        setColHeaders(response.data.result.fields);
+        setDataList(response.data.result);
       });
   }, []);
-
-  const data = React.useMemo<ColumnDetails[]>(() => apiData, [apiData]);
-
-  // value?.updateData(data);
-
-  const columns = React.useMemo<Column[]>(
-    () =>
-      cols.map((col) => ({
-        Header: col.id,
-        accessor: col.id,
-        cell: (info: any) => info.getValue(),
-      })),
-    [cols]
-  );
 
   return (
     <div>
       <Layout>
-        <DataTable data={data} columns={columns} />
-        <button
-          onClick={() => {
-            value?.updateData(data);
-          }}
-        >
-          Update state
-        </button>
+        <div className="px-4 py-10 pb-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <header className="pb-4 pl-3 mb-6 border-b-2 border-gray-300 sm:py-6">
+            {breadCrumbs && <BreadCrumbs breadCrumbs={breadCrumbs} />}
+            <div className="mt-2 md:flex md:items-center md:justify-between"></div>
+          </header>
+          <ul role="list" className="divide-y divide-gray-200 ">
+            {dataList.map((item: item) => (
+              <li key={item.title} className="py-4">
+                {item.title}
+                <p>
+                  {item.resources.filter((obj) => obj.format == "CSV")[0].id}
+                </p>
+                <Link
+                  href={{
+                    pathname: "/table",
+                    query: {
+                      id: item.resources.filter((obj) => obj.format == "CSV")[0]
+                        .id,
+                    },
+                  }}
+                >
+                  <a>path</a>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </Layout>
     </div>
   );

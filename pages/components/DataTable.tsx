@@ -323,7 +323,6 @@ export default function DataTable({ columns, data }: Props) {
         </div>
         <div className="px-4 py-5 sm:p-6 h-96 w-full">
           <Dropdown column={columns} />
-          {/* <MyLine chartData={chartData} /> */}
           <ResponsiveScatter chartData={chartData} />
         </div>
       </div>

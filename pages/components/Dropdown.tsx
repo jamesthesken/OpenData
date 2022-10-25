@@ -29,7 +29,7 @@ export default function Dropdown({ column }: Props) {
   return (
     <Combobox as="div" value={selectedColumn} onChange={setSelectedColumn}>
       <Combobox.Label className="block text-sm font-medium text-gray-700">
-        Assigned to
+        Select Column
       </Combobox.Label>
       <div className="relative mt-1">
         <Combobox.Input

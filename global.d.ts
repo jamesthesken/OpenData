@@ -142,12 +142,18 @@ declare global {
     id: string;
   }
 
+  interface Column {
+    Header: string;
+    accessor: string;
+  }
+
   type DataContextType = {
     data: DataContext;
-    updateData: (data: ColumnDetails[]) => void;
+    updateData: (data: ColumnDetails[], columns: ColumnDetails[]) => void;
   };
 
   interface DataContext {
     data: ColumnDetails[];
+    columns: ColumnDetails[];
   }
 }
