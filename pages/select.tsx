@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import axios from "axios";
 import Layout from "./components/Layout";
 import { DataContext } from "../hooks/useData";
+import Link from "next/link";
 
 interface item {
   title: string;
@@ -12,7 +13,7 @@ interface item {
   }>;
 }
 
-const Home: NextPage = () => {
+const Select: NextPage = () => {
   const [dataList, setDataList] = useState([]);
 
   const data = useContext(DataContext);
@@ -40,6 +41,17 @@ const Home: NextPage = () => {
             <li key={item.title} className="py-4">
               {item.title}
               <p>{item.resources.filter((obj) => obj.format == "CSV")[0].id}</p>
+              <Link
+                href={{
+                  pathname: "/table",
+                  query: {
+                    id: item.resources.filter((obj) => obj.format == "CSV")[0]
+                      .id,
+                  },
+                }}
+              >
+                <a>path</a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -48,4 +60,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Select;

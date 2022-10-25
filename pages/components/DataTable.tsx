@@ -15,7 +15,6 @@ import { DataContext } from "../../hooks/useData";
 import Dropdown from "./Dropdown";
 import MyLine from "./Line";
 import ResponsiveScatter from "./ScatterPlot";
-import { useDataContext } from "../../hooks/useData";
 
 interface ColumnDetails {
   [key: string]: string;
