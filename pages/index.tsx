@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, createContext } from "react";
 import type { NextPage } from "next";
 import axios from "axios";
 import Layout from "./components/Layout";
 import DataTable from "./components/DataTable";
+import { table } from "console";
+import { DataContext } from "../hooks/useData";
 
 interface ColumnDetails {
   [key: string]: string;
@@ -18,6 +20,8 @@ interface Column {
 const Home: NextPage = () => {
   const [apiData, setRowData] = useState<ColumnDetails[]>([]);
   const [cols, setColHeaders] = useState<ColumnDetails[]>([]);
+
+  const value = useContext(DataContext);
 
   useEffect(() => {
     axios
@@ -35,6 +39,8 @@ const Home: NextPage = () => {
 
   const data = React.useMemo<ColumnDetails[]>(() => apiData, [apiData]);
 
+  // value?.updateData(data);
+
   const columns = React.useMemo<Column[]>(
     () =>
       cols.map((col) => ({
@@ -49,6 +55,13 @@ const Home: NextPage = () => {
     <div>
       <Layout>
         <DataTable data={data} columns={columns} />
+        <button
+          onClick={() => {
+            value?.updateData(data);
+          }}
+        >
+          Update state
+        </button>
       </Layout>
     </div>
   );

@@ -1,5 +1,5 @@
 import "regenerator-runtime/runtime";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   useTable,
   useGlobalFilter,
@@ -10,9 +10,12 @@ import {
   useExpanded,
   useRowSelect,
 } from "react-table";
+
+import { DataContext } from "../../hooks/useData";
 import Dropdown from "./Dropdown";
 import MyLine from "./Line";
 import ResponsiveScatter from "./ScatterPlot";
+import { useDataContext } from "../../hooks/useData";
 
 interface ColumnDetails {
   [key: string]: string;
@@ -166,6 +169,10 @@ export default function DataTable({ columns, data }: Props) {
       });
     }
   );
+
+  const value = useContext(DataContext);
+
+  console.log(value);
 
   const [chartData, setChartData] = useState(
     Array<{

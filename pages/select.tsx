@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import type { NextPage } from "next";
 import axios from "axios";
 import Layout from "./components/Layout";
+import { DataContext } from "../hooks/useData";
 
 interface item {
   title: string;
@@ -11,15 +12,12 @@ interface item {
   }>;
 }
 
-function selectData(dataList: any) {
-  var csvId = dataList.filter((obj: item) => {
-    return obj.resources.format == "CSV";
-  });
-  console.log(csvId);
-}
-
 const Home: NextPage = () => {
   const [dataList, setDataList] = useState([]);
+
+  const data = useContext(DataContext);
+
+  console.log(data);
 
   useEffect(() => {
     axios
@@ -41,7 +39,7 @@ const Home: NextPage = () => {
           {dataList.map((item: item) => (
             <li key={item.title} className="py-4">
               {item.title}
-              <button onClick={(item) => console.log(item)}>test</button>
+              <p>{item.resources.filter((obj) => obj.format == "CSV")[0].id}</p>
             </li>
           ))}
         </ul>
