@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import BreadCrumbs from "./components/dashboard/BreadCrumbs";
 import Dropdown from "./components/Dropdown";
 import { DataContext } from "../hooks/useData";
+import { LineChartForm } from "./components/controls/LineChartForm";
 
 interface ColumnDetails {
   [key: string]: string;
@@ -37,6 +38,16 @@ const breadCrumbs = {
 
 const Table: NextPage = () => {
   const value = useContext(DataContext);
+  const [chartData, setChartData] = useState(
+    Array<{
+      id: string | number;
+      data: Array<{
+        x: number | string | Date;
+        y: number | string | Date;
+      }>;
+    }>
+  );
+  console.log(chartData);
 
   return (
     <div>
@@ -66,6 +77,9 @@ const Table: NextPage = () => {
                           Vertical Axis
                         </h2>
                         <Dropdown column={value.data.columns} />
+                      </div>
+                      <div className="p-6">
+                        <LineChartForm setChartData={setChartData} />
                       </div>
                     </div>
                   </section>

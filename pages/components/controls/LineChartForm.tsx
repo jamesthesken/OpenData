@@ -1,5 +1,6 @@
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { Formik, Field, Form, FormikHelpers } from "formik";
-import { useState } from "react";
+import { DataContext } from "../../../hooks/useData";
 
 interface Values {
   firstName: string;
@@ -7,8 +8,12 @@ interface Values {
   email: string;
 }
 
-export function LineChart() {
-  const [columns, setColumns] = useState(["test"] as string[]);
+interface Props {
+  setChartData: Dispatch<SetStateAction<ChartData>>;
+}
+
+export function LineChartForm({ setChartData }: Props) {
+  const value = useContext(DataContext);
 
   return (
     <div>
@@ -24,7 +29,14 @@ export function LineChart() {
           { setSubmitting }: FormikHelpers<Values>
         ) => {
           setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
+            // alert(JSON.stringify(values, null, 2));
+            var chartData = mapToChart(
+              value?.data.data,
+              "BRANDNAME",
+              "FULLNAME",
+              "LICENSEDTTM"
+            );
+            setChartData(chartData);
             setSubmitting(false);
           }, 500);
         }}
@@ -32,7 +44,7 @@ export function LineChart() {
         <Form>
           <label htmlFor="firstName">First Name</label>
           <Field
-            onChange={() => setColumns(["test"])}
+            // onChange={() => setColumns(["test"])}
             id="firstName"
             name="firstName"
             placeholder="John"
@@ -54,4 +66,25 @@ export function LineChart() {
       </Formik>
     </div>
   );
+}
+
+function mapToChart(
+  value: ColumnDetails[],
+  key: string,
+  xAxis: string,
+  yAxis: string
+): ChartData {
+  var arr: ChartData = [
+    {
+      id: key,
+      data: value
+        .map((row) => ({
+          x: row[xAxis],
+          y: row[yAxis],
+        }))
+        .filter((o) => o.y != null || o.x != null),
+    },
+  ];
+  console.log(arr);
+  return arr;
 }
