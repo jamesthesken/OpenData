@@ -201,7 +201,7 @@ const Layout: NextPage<Props> = ({ children }) => {
           )}
         </Disclosure>
 
-        <div className="py-10">
+        <div>
           <main>
             <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">{children}</div>
           </main>
