@@ -1,77 +1,85 @@
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { Formik, Field, Form, FormikHelpers } from "formik";
 import { DataContext } from "../../../hooks/useData";
+import { stringify } from "querystring";
+import { values } from "lodash";
 
 interface FormValues {
-  id: string;
-  xAxis: string;
-  yAxis: string;
+  idx: string;
+  keys: string;
 }
 
 interface Props {
-  setChartData: Dispatch<SetStateAction<ChartData>>;
+  setChartData: Dispatch<SetStateAction<BarChart[]>>;
+  setBarChartIndex: Dispatch<SetStateAction<string>>;
+  setBarChartKeys: Dispatch<SetStateAction<string[]>>;
 }
 
-export function LineChartForm({ setChartData }: Props) {
+export function BarChartForm({
+  setChartData,
+  setBarChartIndex,
+  setBarChartKeys,
+}: Props) {
   const value = useContext(DataContext);
 
   return (
     <div>
       <Formik
         initialValues={{
-          id: "",
-          xAxis: "",
-          yAxis: "",
+          idx: "",
+          keys: "",
         }}
         onSubmit={(
           formValues: FormValues,
           { setSubmitting }: FormikHelpers<FormValues>
         ) => {
           setTimeout(() => {
-            var chartData = mapToChart(
-              value?.data.data,
-              formValues.id,
-              formValues.xAxis,
-              formValues.yAxis
+            var arr: Array<Record<string, string>> = [];
+            groupByToMap(value.data.data, (k) => k[formValues.idx]).forEach(
+              (value: ColumnDetails[], key: string) => {
+                arr.push(
+                  mapToChart(value, key, formValues.keys, formValues.idx)
+                );
+              }
             );
-            setChartData(chartData);
+            setBarChartIndex(formValues.idx);
+            setBarChartKeys([formValues.keys]);
+            setChartData(arr);
             setSubmitting(false);
           }, 500);
         }}
       >
         <Form>
           <h2 className="block text-xl font-medium text-gray-700 mb-5">
-            Series ID
+            Index By
           </h2>
           <label
-            htmlFor="id"
+            htmlFor="idx"
             className="block text-sm font-medium text-gray-700"
           >
             Select Column
           </label>
           <Field
             as="select"
-            id="id"
-            name="id"
+            id="idx"
+            name="idx"
             className="mt-1 mb-6 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
           >
             {value?.data.columns.map((column) => {
               return <option value={column.id}>{column.id}</option>;
             })}
           </Field>
-          <h2 className="block text-xl font-medium text-gray-700 mb-5">
-            Horizontal Axis
-          </h2>
+          <h2 className="block text-xl font-medium text-gray-700 mb-5">Keys</h2>
           <label
-            htmlFor="xAxis"
+            htmlFor="keys"
             className="block text-sm font-medium text-gray-700"
           >
             Select Column
           </label>
           <Field
             as="select"
-            id="xAxis"
-            name="xAxis"
+            id="keys"
+            name="keys"
             className="mt-1 mb-6 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
           >
             {value?.data.columns.map((column) => {
@@ -112,22 +120,13 @@ export function LineChartForm({ setChartData }: Props) {
 function mapToChart(
   value: ColumnDetails[],
   key: string,
-  xAxis: string,
-  yAxis: string
-): ChartData {
-  var arr: ChartData = [
-    {
-      id: key,
-      data: value
-        .map((row) => ({
-          x: row[xAxis],
-          y: row[yAxis],
-        }))
-        .filter((o) => o.y != null || o.x != null),
-    },
-  ];
-  console.log(arr);
-  return arr;
+  idx: string,
+  indexName: string
+): Record<string, string> {
+  var obj: Record<string, string> = {};
+  obj[indexName] = key;
+  obj[idx] = value.map((row) => row[idx]).reduce((prev, next) => prev + next);
+  return obj;
 }
 
 const groupByToMap = <T, Q>(

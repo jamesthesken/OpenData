@@ -8,6 +8,8 @@ declare global {
       y: number | string | Date;
     }>;
   }>;
+  type BarChart = Object;
+
   import {
     UseColumnOrderInstanceProps,
     UseColumnOrderState,

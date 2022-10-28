@@ -302,53 +302,6 @@ export default function DataTable({ columns, data }: Props) {
           ))}
         </select>
       </div>
-      <button
-        onClick={() =>
-          groupByToMap(data, (k) => k["Candidate Name"]).forEach(
-            (value: ColumnDetails[], key: string) => {
-              const arr = mapToChart(value, key, chartData);
-              setChartData(arr);
-              console.log(chartData);
-            }
-          )
-        }
-      >
-        Get Data
-      </button>
-      <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow mt-8">
-        <div className="px-4 py-5 sm:px-6">
-          <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-            Horizontal Axis
-          </h1>
-        </div>
-        <div className="px-4 py-5 sm:p-6 h-96 w-full">
-          {/* <Dropdown column={columns} /> */}
-          <ResponsiveScatter chartData={chartData} />
-        </div>
-      </div>
     </>
   );
-}
-
-const groupByToMap = <T, Q>(
-  array: T[],
-  predicate: (value: T, index: number, array: T[]) => Q
-) =>
-  array.reduce((map, value, index, array) => {
-    const key = predicate(value, index, array);
-    map.get(key)?.push(value) ?? map.set(key, [value]);
-    return map;
-  }, new Map<Q, T[]>());
-
-function mapToChart(value: ColumnDetails[], key: string, arr: ChartData) {
-  arr.push({
-    id: key,
-    data: value
-      .map((person) => ({
-        x: person["Purpose of Expenditure"],
-        y: person["Unpaid Expenditure Amount"],
-      }))
-      .filter((o) => o.y != null || o.x != null),
-  });
-  return arr;
 }

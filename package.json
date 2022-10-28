@@ -11,8 +11,10 @@
   "dependencies": {
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
+    "@nivo/bar": "^0.80.0",
     "@nivo/line": "^0.80.0",
     "@nivo/scatterplot": "^0.80.0",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tanstack/match-sorter-utils": "^8.5.14",
     "@tanstack/react-table": "^8.5.15",
