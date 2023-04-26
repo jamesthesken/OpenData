@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePackagesWithCsvFiles } from "../hooks/useCsvPackages";
 import { useQuery } from "@tanstack/react-query";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useForm } from "react-hook-form";
 
 interface item {
   title: string;
@@ -54,6 +55,28 @@ const breadCrumbs = {
   },
 };
 
+// Hook
+function useDebounce(value: string, delay: number) {
+  // State and setters for debounced value
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(
+    () => {
+      // Update debounced value after delay
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+      // Cancel the timeout if value changes (also on delay change or unmount)
+      // This is how we prevent debounced value from updating if value is changed ...
+      // .. within the delay period. Timeout gets cleared and restarted.
+      return () => {
+        clearTimeout(handler);
+      };
+    },
+    [value, delay] // Only re-call effect if value or delay changes
+  );
+  return debouncedValue;
+}
+
 // to remove weird characters from the notes
 const regex = /(<([^>]+)>)/gi;
 
@@ -63,17 +86,35 @@ const Home: NextPage = () => {
   const [page, setPage] = useState(0);
   const [value, setValue] = useState("");
 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data: any) => {
+    setValue(data.search);
+    refetch();
+  };
+
   const fetchCsvResources = (page = 0) =>
     fetch(
-      `https://opendata.hawaii.gov/api/3/action/package_search?fq=res_format:CSV&rows=20&start=${page}`
+      `https://opendata.hawaii.gov/api/3/action/package_search?q=${value}&fq=res_format:CSV&rows=20&start=${page}`
     ).then((res) => res.json());
 
-  const { isLoading, isError, error, data, isFetching, isPreviousData } =
-    useQuery({
-      queryKey: ["csvData", page],
-      queryFn: () => fetchCsvResources(page),
-      keepPreviousData: true,
-    });
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+    isFetching,
+    isPreviousData,
+    refetch,
+  } = useQuery({
+    queryKey: ["csvData", page, value],
+    queryFn: () => fetchCsvResources(page),
+    keepPreviousData: true,
+  });
 
   console.log(data);
 
@@ -89,6 +130,7 @@ const Home: NextPage = () => {
             <label htmlFor="search" className="sr-only">
               Search
             </label>
+
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <MagnifyingGlassIcon
@@ -96,18 +138,18 @@ const Home: NextPage = () => {
                   aria-hidden="true"
                 />
               </div>
-              <input
-                id="search"
-                name="search"
-                className="block w-full rounded-md border-0 bg-gray-100 py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 focus:bg-white focus:text-gray-900 focus:ring-0 focus:placeholder:text-gray-500 sm:text-sm sm:leading-6"
-                placeholder="Search"
-                type="search"
-                onChange={(val) => setValue(val.target.value)}
-              />
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <input
+                  id="search"
+                  className="block w-full rounded-md border-0 bg-gray-100 py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 focus:bg-white focus:text-gray-900 focus:ring-0 focus:placeholder:text-gray-500 sm:text-sm sm:leading-6"
+                  placeholder="Search"
+                  type="search"
+                  {...register("search")}
+                />
+              </form>
             </div>
           </div>
           <div>
-            {isFetching ? <span> Loading...</span> : null}{" "}
             {isLoading ? (
               <div>Loading...</div>
             ) : isError ? (
