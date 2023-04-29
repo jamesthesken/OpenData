@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import type { NextPage } from "next";
+import Image from "next/image";
 import axios from "axios";
 import Layout from "./components/Layout";
 import BreadCrumbs from "./components/dashboard/BreadCrumbs";
@@ -8,6 +9,7 @@ import { usePackagesWithCsvFiles } from "../hooks/useCsvPackages";
 import { useQuery } from "@tanstack/react-query";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
+import screenshot from "../public/demo_screenshot.png";
 
 interface item {
   title: string;
@@ -51,7 +53,7 @@ const breadCrumbs = {
   },
   first: {
     path: "/",
-    text: "Dashboard",
+    text: "Home",
   },
 };
 
@@ -116,21 +118,77 @@ const Home: NextPage = () => {
     keepPreviousData: true,
   });
 
-  console.log(data);
-
   return (
     <div>
       <Layout>
         <div className="px-4 py-10 pb-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <header className="pb-4 pl-3 mb-6 border-b-2 border-gray-300 sm:py-6">
-            {breadCrumbs && <BreadCrumbs breadCrumbs={breadCrumbs} />}
-            <div className="mt-2 md:flex md:items-center md:justify-between"></div>
-          </header>
+          <div className="relative isolate pt-14">
+            <div
+              className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+              aria-hidden="true"
+            >
+              <div
+                className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                style={{
+                  clipPath:
+                    "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+                }}
+              />
+            </div>
+            <div className="py-24 sm:py-32 lg:pb-40">
+              <div className="mx-auto max-w-7xl px-6 lg:px-8">
+                <div className="mx-auto max-w-2xl text-center">
+                  <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+                    Explore data from OpenData Hawaii
+                  </h1>
+                  <p className="mt-6 text-lg leading-8 text-gray-600">
+                    Dive into government datasets
+                  </p>
+                  <div className="mt-10 flex items-center justify-center gap-x-6">
+                    <a
+                      href="#"
+                      className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    >
+                      Get started
+                    </a>
+                    <a
+                      href="#"
+                      className="text-sm font-semibold leading-6 text-gray-900"
+                    >
+                      Learn more <span aria-hidden="true">→</span>
+                    </a>
+                  </div>
+                </div>
+                <div className="mt-16 flow-root sm:mt-24">
+                  <div className="-m-2 rounded-xl lg:p-4">
+                    <Image
+                      src={screenshot}
+                      alt="App screenshot"
+                      width={2432}
+                      height={1442}
+                      className="rounded-lg shadow-2xl ring-1 ring-gray-900/10"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+              aria-hidden="true"
+            >
+              <div
+                className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+                style={{
+                  clipPath:
+                    "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+                }}
+              />
+            </div>
+          </div>
           <div className="w-full sm:max-w-xs">
             <label htmlFor="search" className="sr-only">
               Search
             </label>
-
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <MagnifyingGlassIcon
@@ -141,7 +199,7 @@ const Home: NextPage = () => {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <input
                   id="search"
-                  className="block w-full rounded-md border-0 bg-gray-100 py-1.5 pl-10 pr-3 text-gray-300 placeholder:text-gray-400 focus:bg-white focus:text-gray-900 focus:ring-0 focus:placeholder:text-gray-500 sm:text-sm sm:leading-6"
+                  className="block w-full rounded-md border-0 bg-gray-100 py-1.5 pl-10 pr-3 text-gray-600 placeholder:text-gray-400 focus:bg-white focus:text-gray-900 focus:ring-0 focus:placeholder:text-gray-500 sm:text-sm sm:leading-6"
                   placeholder="Search"
                   type="search"
                   {...register("search")}
@@ -149,6 +207,9 @@ const Home: NextPage = () => {
               </form>
             </div>
           </div>
+          <h1 className="mt-5 text-3xl text-gray-800 font-semibold">
+            {data?.result.count} Datasets found
+          </h1>
           <div>
             {isLoading ? (
               <div>Loading...</div>
@@ -160,8 +221,9 @@ const Home: NextPage = () => {
                   <div key={dataset.id} className="mt-10">
                     <Link
                       href={{
-                        pathname: "/table",
+                        pathname: "/pivot",
                         query: {
+                          dataSetId: dataset.id,
                           id: dataset.resources.filter(
                             (obj: any) => obj.format == "CSV"
                           )[0].id,
