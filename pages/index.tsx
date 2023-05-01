@@ -30,7 +30,13 @@ export type Dataset = {
   url: string;
   state: string;
   metadata_created: string;
-  metadata_moidified: string;
+  metadata_modified: string;
+  organization: {
+    id: string;
+    approval_status: string;
+    name: string;
+    title: string;
+  };
   tags: {
     state: string;
     display_name: string;
@@ -142,11 +148,14 @@ const Home: NextPage = () => {
                     Explore data from OpenData Hawaii
                   </h1>
                   <p className="mt-6 text-lg leading-8 text-gray-600">
-                    Dive into government datasets
+                    Dive into government datasets related to education,
+                    healthcare, environment, tourism, and much more. Whether you
+                    are a researcher, student, or data enthusiast, explore and
+                    visualize data that matters to you.
                   </p>
                   <div className="mt-10 flex items-center justify-center gap-x-6">
                     <a
-                      href="#"
+                      href="#datasets"
                       className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                       Get started
@@ -185,7 +194,7 @@ const Home: NextPage = () => {
               />
             </div>
           </div>
-          <div className="w-full sm:max-w-xs">
+          <div id="datasets" className="w-full sm:max-w-xs">
             <label htmlFor="search" className="sr-only">
               Search
             </label>
