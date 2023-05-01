@@ -16,11 +16,6 @@
     "incremental": true,
     "downlevelIteration": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "pages/components/Line.jsx"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/Line.jsx"],
   "exclude": ["node_modules"]
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Layout from "./components/Layout";
+import Layout from "../components/Layout";
 import { NextPage } from "next";
 import "react-pivottable/pivottable.css";
-import BreadCrumbs from "./components/dashboard/BreadCrumbs";
+import BreadCrumbs from "../components/dashboard/BreadCrumbs";
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 import dynamic from "next/dynamic";
 import axios from "axios";
@@ -30,8 +30,8 @@ import {
 
 import "@imc-trading/react-pivottable/pivottable.css";
 import { useRouter } from "next/router";
-import InfoAlert from "./components/Info";
-import DataDetails from "./components/DataDetails";
+import InfoAlert from "../components/Info";
+import DataDetails from "../components/DataDetails";
 
 // to remove weird characters from the notes
 const regex = /(<([^>]+)>)/gi;

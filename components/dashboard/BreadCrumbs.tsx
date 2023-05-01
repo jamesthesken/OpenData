@@ -25,7 +25,7 @@ const BreadCrumbs: React.FC<Props> = ({ breadCrumbs }) => {
   return (
     <>
       <nav className="sm:hidden">
-        <Link href={breadCrumbs.back.path}>
+        <Link href={breadCrumbs.back?.path}>
           <a
             href=""
             className="flex items-center text-sm font-medium leading-5 text-gray-600 transition duration-150 ease-in-out hover:text-gray-500 focus:outline-none focus:underline"
@@ -41,7 +41,7 @@ const BreadCrumbs: React.FC<Props> = ({ breadCrumbs }) => {
                 clipRule="evenodd"
               />
             </svg>
-            Back
+            {breadCrumbs.back?.text ?? "Back"}
           </a>
         </Link>
       </nav>

@@ -1,24 +1,12 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
-import axios from "axios";
-import Layout from "./components/Layout";
-import BreadCrumbs from "./components/dashboard/BreadCrumbs";
+import Layout from "../components/Layout";
 import Link from "next/link";
-import { usePackagesWithCsvFiles } from "../hooks/useCsvPackages";
 import { useQuery } from "@tanstack/react-query";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import screenshot from "../public/demo_screenshot.png";
-
-interface item {
-  title: string;
-  id: string;
-  resources: Array<{
-    id: string;
-    format: string;
-  }>;
-}
 
 export type Dataset = {
   creator_user_id: string;
@@ -50,17 +38,6 @@ export type Dataset = {
     url: string;
     name: string;
   }[];
-};
-
-const breadCrumbs = {
-  back: {
-    path: "/",
-    text: "Back",
-  },
-  first: {
-    path: "/",
-    text: "Home",
-  },
 };
 
 // Hook
