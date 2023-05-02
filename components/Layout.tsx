@@ -12,7 +12,7 @@ const user = {
 };
 const navigation = [
   { name: "Home", href: "#", current: true },
-  { name: "About", href: "#", current: false },
+  { name: "About", href: "#faq", current: false },
 ];
 
 interface Props {

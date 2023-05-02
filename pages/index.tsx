@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import screenshot from "../public/demo_screenshot.png";
+import Faq from "../components/Faq";
 
 export type Dataset = {
   creator_user_id: string;
@@ -111,7 +112,7 @@ const Home: NextPage = () => {
               aria-hidden="true"
             >
               <div
-                className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-r from-green-300 via-yellow-300 to-pink-300 opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
                 style={{
                   clipPath:
                     "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
@@ -138,7 +139,7 @@ const Home: NextPage = () => {
                       Get started
                     </a>
                     <a
-                      href="#"
+                      href="#faq"
                       className="text-sm font-semibold leading-6 text-gray-900"
                     >
                       Learn more <span aria-hidden="true">→</span>
@@ -146,13 +147,13 @@ const Home: NextPage = () => {
                   </div>
                 </div>
                 <div className="mt-16 flow-root sm:mt-24">
-                  <div className="-m-2 rounded-xl lg:p-4">
+                  <div className="-m-2 rounded-2xl lg:p-4">
                     <Image
                       src={screenshot}
                       alt="App screenshot"
                       width={2432}
                       height={1442}
-                      className="rounded-lg shadow-2xl ring-1 ring-gray-900/10"
+                      className="rounded-2xl shadow-2xl ring-1 ring-gray-900/10"
                     />
                   </div>
                 </div>
@@ -163,7 +164,7 @@ const Home: NextPage = () => {
               aria-hidden="true"
             >
               <div
-                className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+                className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-r from-green-300 via-yellow-300 to-pink-300 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
                 style={{
                   clipPath:
                     "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
@@ -307,6 +308,7 @@ const Home: NextPage = () => {
               </div>
             </nav>
           </div>
+          <Faq />
         </div>
       </Layout>
     </div>
